@@ -9,14 +9,34 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/reactJest.zip'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing'
+        stage('Deploying to staging') {
+            when {
+                branch 'master'
             }
-        }
-        stage('Deploy') {
             steps {
-                echo 'Deploying asad'
+                withCredentials([usernamePassword(credentialsId: 'staging_webserver', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    sshPublisher(
+                        failOnError: true,
+                        continueOnError: false,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'staging',
+                                sshCredentials: [
+                                    username: '$USERNAME',
+                                    encryptedPassphrase: '$USERPASS'
+                                ],
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'dist/reactJest.zip',
+                                        removePrefix: 'dist/',
+                                        remoteDirectory: '/tmp',
+                                        execCommand: 'unzip /tmp/reactJest.zip'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
             }
         }
     }
