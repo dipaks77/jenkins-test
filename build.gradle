@@ -14,7 +14,7 @@
     download = true
  }
 
- task react_build
+ task build
 
  task zip(type: Zip) {
      from ('.') {
@@ -28,5 +28,5 @@
     args = ['run', 'build']
  }
 
-react_build.dependsOn(zip)
+build.dependsOn(zip)
 zip.dependsOn(bundle)
