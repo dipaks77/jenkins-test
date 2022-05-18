@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Building'
                 sh './gradlew build'
-                archieveArtifacts artifacts: 'dist/reactJest.zip'
+                archiveArtifacts artifacts: 'dist/reactJest.zip'
             }
         }
         stage('Test') {
