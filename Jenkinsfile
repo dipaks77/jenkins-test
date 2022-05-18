@@ -5,6 +5,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building'
+                sh './gradlew build --no-deamon'
+                archieveArtifacts artifacts: 'dist/reactJest.zip'
             }
         }
         stage('Test') {
